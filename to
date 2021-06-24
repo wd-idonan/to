@@ -188,12 +188,13 @@ def login(host, user, password=None, port=22, key=None, alias=None):
         '(?i)connection closed by remote host',
         '(?i)welcome to',
         '(?i)last login:',
+        #连接windows
+        '(?i)microsoft windows',
     ]
 
     while True:
         try:
             index = ssh.expect(prompts, timeout=30)
-            
             if index == 0:
                 print('Are you sure you want to continue connecting: yes')
                 ssh.sendline('yes')
@@ -219,8 +220,8 @@ def login(host, user, password=None, port=22, key=None, alias=None):
                 ssh.terminate()
                 print('Connection closed by remote host')
                 sys.exit(1)
-            elif index in [6, 7]:
-                print({6: 'Welcome to', 7: 'Last login:'}[index],
+            elif index in [6, 7, 8]:
+                print({6: 'Welcome to', 7: 'Last login:', 8: 'Microsoft Windows'}[index],
                       end='', flush=True)
                 record_host(host, user, password, port, key)
                 if alias is not None:
